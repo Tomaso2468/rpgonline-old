@@ -92,7 +92,7 @@ public class LocalLogonServer implements UserServer {
 	@Override
 	public synchronized long getUserUuid(String login) {
 		for (User u : users) {
-			if (u.getLogin() == login) {
+			if (u.getLogin().equals(login)) {
 				return u.getUuid();
 			}
 		}
