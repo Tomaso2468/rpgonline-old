@@ -1,5 +1,7 @@
 package rpgonline.net.logon;
 
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +126,9 @@ public class LocalLogonServer implements UserServer {
 		/**
 		 * A private ID for verification.
 		 */
-		private final long puuid;
+		private long puuid;
+		
+		private long reload_time;
 
 		/**
 		 * Constructs a new {@code User}.
@@ -141,6 +145,7 @@ public class LocalLogonServer implements UserServer {
 			this.uuid = uuid;
 			this.username = username;
 			this.puuid = puuid;
+			this.reload_time = System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5;
 		}
 
 		/**
@@ -157,12 +162,8 @@ public class LocalLogonServer implements UserServer {
 			this.password = password;
 			this.uuid = uuid;
 			this.username = username;
-			long hpuuid = (("" + uuid + login).hashCode() << 32L) | (("" + password + username).hashCode());
-			if (hpuuid == -1) {
-				this.puuid = Long.MAX_VALUE;
-			} else {
-				this.puuid = hpuuid;
-			}
+			this.reload_time = System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5;
+			this.puuid = new SecureRandom(longToBytes(uuid)).nextLong();
 		}
 
 		/**
@@ -207,8 +208,24 @@ public class LocalLogonServer implements UserServer {
 		 * @return A unique long value.
 		 */
 		public long getPuuid() {
+			if(reload_time < System.currentTimeMillis()) {
+				pickNewPUUID();
+			}
 			return puuid;
 		}
+		
+		public void pickNewPUUID() {
+			SecureRandom random = new SecureRandom(longToBytes(uuid));
+			puuid = random.nextLong();
+			
+			this.reload_time = System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5;
+		}
+	}
+	
+	public static byte[] longToBytes(long x) {
+	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+	    buffer.putLong(x);
+	    return buffer.array();
 	}
 
 	/**
@@ -235,5 +252,20 @@ public class LocalLogonServer implements UserServer {
 			}
 		}
 		return false;
+	}
+	
+	private long count = -1;
+	public synchronized long getNextID() {
+		count += 1;
+		
+		long next = new SecureRandom(longToBytes(count)).nextLong();
+		
+		for(User u : users) {
+			if(u.uuid == next) {
+				return getNextID();
+			}
+		}
+		
+		return next;
 	}
 }
