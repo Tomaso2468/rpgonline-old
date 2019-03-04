@@ -176,7 +176,7 @@ public class WorldState extends BasicGameState {
 			}
 		}
 
-		while (lights.size() > 8) {
+		while (lights.size() > 10) {
 			lights.remove(lights.size() - 1);
 		}
 
