@@ -72,13 +72,14 @@ public class MusicManager {
 					current.fade(1000, 0, true);
 					new Thread() {
 						public void run() {
+							setUncaughtExceptionHandler(new GameExceptionHandler());
 							try {
 								Thread.sleep(1100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
+								music.get(id).loop(1, loud ? 1f : 0.5f);
+								current = music.get(id);
+							} catch (Exception e) {
+								Log.error(e);
 							}
-							music.get(id).loop(1, loud ? 1f : 0.5f);
-							current = music.get(id);
 						}
 					}.start();
 				} else {

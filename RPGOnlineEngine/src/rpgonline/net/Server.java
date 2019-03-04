@@ -7,6 +7,7 @@ import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.util.Log;
 
+import rpgonline.GameExceptionHandler;
 import rpgonline.world.Entity;
 import rpgonline.world.LightSource;
 import rpgonline.world.World;
@@ -72,6 +73,8 @@ public interface Server {
 	public default void start() {
 		new Thread("Server Thread") {
 			public void run() {
+				Thread.currentThread().setUncaughtExceptionHandler(new GameExceptionHandler());
+				
 				long last_update = System.currentTimeMillis();
 
 				try {
