@@ -69,12 +69,12 @@ public class MusicManager {
 			}
 			if (!music.get(id).playing()) {
 				if (current != null) {
-					current.fade(1000, 0, true);
+					current.fade(50, 0, true);
 					new Thread() {
 						public void run() {
 							setUncaughtExceptionHandler(new GameExceptionHandler());
 							try {
-								Thread.sleep(1100);
+								Thread.sleep(60);
 								music.get(id).loop(1, loud ? 1f : 0.5f);
 								current = music.get(id);
 							} catch (Exception e) {
