@@ -1,7 +1,7 @@
 package rpgonline.post.pack;
 
 import rpgonline.post.ColorBoostEffect;
-import rpgonline.post.DynamicHeatShader2;
+import rpgonline.post.LowExpose;
 import rpgonline.post.MultiEffect;
 
 /**
@@ -14,6 +14,6 @@ public class MediumShaderPack extends MultiEffect {
 	 * Create the shader pack.
 	 */
 	public MediumShaderPack() {
-		super(new DynamicHeatShader2("get heat"), new ColorBoostEffect());
+		super(new ColorBoostEffect(), new LowExpose());
 	}
 }

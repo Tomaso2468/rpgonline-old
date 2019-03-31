@@ -1,6 +1,5 @@
 package rpgonline.post.pack;
 
-import rpgonline.post.DynamicHeatShader2;
 import rpgonline.post.MultiEffect;
 
 /**
@@ -13,6 +12,6 @@ public class LowShaderPack extends MultiEffect {
 	 * Create the shader pack.
 	 */
 	public LowShaderPack() {
-		super(new DynamicHeatShader2("get heat"));
+		super();
 	}
 }
