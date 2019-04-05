@@ -3,6 +3,8 @@ package rpgonline.world.chunk;
 import java.io.File;
 import java.io.IOException;
 
+import org.newdawn.slick.util.Log;
+
 import rpgonline.tile.Tiles;
 
 public class DiskChunkWorld extends ChunkWorld {
@@ -23,7 +25,7 @@ public class DiskChunkWorld extends ChunkWorld {
 							try {
 								chunk.read(getChunkFile(f, cx, cy, cz));
 							} catch (IOException e) {
-								System.err.println("Failed to cache chunk " + cx + " " + cy + " " + cz);
+								Log.error("Failed to cache chunk " + cx + " " + cy + " " + cz);
 							}
 							chunks.add(chunk);
 							cache.add(new CacheEntry(chunk, System.currentTimeMillis()));
@@ -87,7 +89,7 @@ public class DiskChunkWorld extends ChunkWorld {
 				return chunk;
 			}
 		} catch (IOException e) {
-			System.err.println("Failed to read chunk " + cx + " " + cy + " " + cz);
+			Log.error("Failed to read chunk " + cx + " " + cy + " " + cz);
 			e.printStackTrace();
 		}
 		
