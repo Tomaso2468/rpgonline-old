@@ -17,6 +17,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import rpgonline.MusicManager;
+import rpgonline.entity.Entity;
 import rpgonline.gui.GUIItem;
 import rpgonline.net.ServerManager;
 import rpgonline.post.MultiEffect;
@@ -25,7 +26,6 @@ import rpgonline.post.PostEffect;
 import rpgonline.post.pack.PotatoShaderPack;
 import rpgonline.tile.Tile;
 import rpgonline.tile.Tiles;
-import rpgonline.world.Entity;
 import rpgonline.world.LightSource;
 import rpgonline.world.World;
 

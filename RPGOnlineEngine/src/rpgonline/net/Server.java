@@ -8,7 +8,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.util.Log;
 
 import rpgonline.GameExceptionHandler;
-import rpgonline.world.Entity;
+import rpgonline.entity.Entity;
+import rpgonline.entity.UpdatePacket;
 import rpgonline.world.LightSource;
 import rpgonline.world.World;
 
@@ -75,7 +76,7 @@ public interface Server {
 			public void run() {
 				Thread.currentThread().setUncaughtExceptionHandler(new GameExceptionHandler());
 				
-				long last_update = System.currentTimeMillis();
+				long last_update = System.nanoTime();
 
 				try {
 					init();
@@ -98,17 +99,18 @@ public interface Server {
 				}
 				try {
 					while (true) {
-						last_update = System.currentTimeMillis();
+						last_update = System.nanoTime();
 						update();
-						if (System.currentTimeMillis() - last_update > (1000 / 60)) {
-							if (System.currentTimeMillis() - last_update - 1000 / 60 > 32) {
-								Log.warn("Server is running " + (System.currentTimeMillis() - last_update - 1000 / 60)
+						if (System.nanoTime() - last_update > (1000000000 / 60)) {
+							if (System.nanoTime() - last_update - 1000000000 / 60 > 32) {
+								Log.warn("Server is running " + (System.nanoTime() - last_update - 1000000000 / 60)
 										+ " millis behind.");
 							}
 						}
-						while (System.currentTimeMillis() - last_update < (1000 / 60)) {
+						while (System.nanoTime() - last_update < (1000000000 / 60)) {
 							Thread.yield();
 						}
+						ServerManager.update_time = System.nanoTime() - last_update;
 					}
 				} catch (Throwable e) {
 					Log.error("Error in server thread.", e);
@@ -246,4 +248,8 @@ public interface Server {
 	public String getMusic();
 	
 	public void stop();
+	
+	public default void updateEntity(UpdatePacket p) {
+		
+	}
 }

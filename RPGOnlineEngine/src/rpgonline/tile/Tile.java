@@ -9,9 +9,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import rpgonline.TextureMap;
+import rpgonline.entity.Entity;
 import rpgonline.world.LightSource;
 import rpgonline.world.World;
-import rpgonline.world.Entity;
 
 /**
  * A class for tiles in a 2D top-down world.
