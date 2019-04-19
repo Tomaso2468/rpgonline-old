@@ -60,6 +60,8 @@ public interface UserServer {
 	 * @return {@code true} if the UUIDs are valid. {@code false} otherwise.
 	 */
 	public boolean isValidPrivateUuid(long uuid, long puuid);
+	
+	public long getIDFromName(String username);
 
 	/**
 	 * An enum representing connect status.

@@ -268,4 +268,14 @@ public class LocalLogonServer implements UserServer {
 		
 		return next;
 	}
+
+	@Override
+	public long getIDFromName(String username) {
+		for (User u : users) {
+			if (u.getUsername().equals(username)) {
+				return u.getUuid();
+			}
+		}
+		return -1;
+	}
 }

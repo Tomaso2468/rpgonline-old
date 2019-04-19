@@ -317,8 +317,50 @@ public class HttpLogonServer implements UserServer {
 
 			return Boolean.parseBoolean(response.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 			return false;
+		}
+	}
+
+	@Override
+	public long getIDFromName(String username) {
+		try {
+			String query = "username=" + URLEncoder.encode(username, "UTF-8");
+			query += "&";
+			query += "action=" + URLEncoder.encode("idfromname", "UTF-8");
+
+			URL myurl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) myurl.openConnection();
+			con.setRequestMethod("POST");
+
+			con.setRequestProperty("Content-length", String.valueOf(query.length()));
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencode");
+			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+
+			DataOutputStream output = new DataOutputStream(con.getOutputStream());
+
+			output.writeBytes(query);
+
+			output.close();
+
+			DataInputStream input = new DataInputStream(con.getInputStream());
+
+			StringBuilder response = new StringBuilder();
+
+			for (int c = input.read(); c != -1; c = input.read()) {
+				response.append(c);
+			}
+			input.close();
+
+			System.out.println("User name Resp Code: " + con.getResponseCode());
+			System.out.println("User name Resp Message: " + con.getResponseMessage());
+
+			return Long.parseLong(response.toString());
+		} catch (IOException e) {
+			Log.error(e);
+			return -1;
 		}
 	}
 }

@@ -193,6 +193,9 @@ public abstract class Entity implements Serializable {
 	
 	public String getString(String name) {
 		String s = strings.get(name);
+		if(s == null) {
+			s = "null";
+		}
 		if(s.equals("null")) {
 			return null;
 		} else {

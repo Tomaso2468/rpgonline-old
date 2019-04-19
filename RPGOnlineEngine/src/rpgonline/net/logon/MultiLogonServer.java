@@ -103,6 +103,11 @@ public class MultiLogonServer implements UserServer {
 			return false;
 		}
 
+		@Override
+		public long getIDFromName(String username) {
+			return -1;
+		}
+
 	}
 
 	/**
@@ -151,5 +156,10 @@ public class MultiLogonServer implements UserServer {
 	@Override
 	public boolean isValidPrivateUuid(long uuid, long puuid) {
 		return getBestServer().isValidPrivateUuid(uuid, puuid);
+	}
+
+	@Override
+	public long getIDFromName(String username) {
+		return getBestServer().getIDFromName(username);
 	}
 }

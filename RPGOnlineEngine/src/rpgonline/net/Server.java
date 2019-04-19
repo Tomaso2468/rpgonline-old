@@ -103,7 +103,7 @@ public interface Server {
 						update();
 						if (System.nanoTime() - last_update > (1000000000 / 60)) {
 							if (System.nanoTime() - last_update - 1000000000 / 60 > 32) {
-								Log.warn("Server is running " + (System.nanoTime() - last_update - 1000000000 / 60)
+								Log.warn("Server is running " + (System.nanoTime() - last_update - 1000000000 / 60) / 1000000
 										+ " millis behind.");
 							}
 						}
@@ -251,5 +251,9 @@ public interface Server {
 	
 	public default void updateEntity(UpdatePacket p) {
 		
+	}
+	
+	public default boolean hasInited() {
+		return true;
 	}
 }
