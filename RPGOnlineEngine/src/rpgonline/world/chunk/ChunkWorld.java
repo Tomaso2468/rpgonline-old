@@ -247,24 +247,4 @@ public class ChunkWorld implements World {
 	public int getBiomeID(long x, long y, long z) {
 		return getChunk(x, y, z).getBiome(xToChunk(x), xToChunk(y), zToChunk(z));
 	}
-
-	@Override
-	public void setHumidity(long x, long y, long z, float id) {
-		getChunk(x, y, z).setHumidity(xToChunk(x), xToChunk(y), zToChunk(z), id);
-	}
-
-	@Override
-	public float getHumidity(long x, long y, long z) {
-		return getChunk(x, y, z).getHumidity(xToChunk(x), xToChunk(y), zToChunk(z));
-	}
-
-	@Override
-	public void setTemperature(long x, long y, long z, float id) {
-		getChunk(x, y, z).setTemperature(xToChunk(x), xToChunk(y), zToChunk(z), id);
-	}
-
-	@Override
-	public float getTemperature(long x, long y, long z) {
-		return getChunk(x, y, z).getTemperature(xToChunk(x), xToChunk(y), zToChunk(z));
-	}
 }

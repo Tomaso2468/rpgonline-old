@@ -47,6 +47,7 @@ public class ChangesChunkWorld extends ChunkWorld {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static World read(File f) throws IOException {
 		DataInputStream header = new DataInputStream(new BufferedInputStream(new FileInputStream(f)));
 		

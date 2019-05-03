@@ -116,24 +116,4 @@ public class WorldWrapper implements World {
 	public int getBiomeID(long x, long y, long z) {
 		return world.getBiomeID(x, y, z);
 	}
-
-	@Override
-	public void setHumidity(long x, long y, long z, float id) {
-		world.setHumidity(x, y, z, id);
-	}
-
-	@Override
-	public float getHumidity(long x, long y, long z) {
-		return world.getHumidity(x, y, z);
-	}
-
-	@Override
-	public void setTemperature(long x, long y, long z, float id) {
-		world.setTemperature(x, y, z, id);
-	}
-
-	@Override
-	public float getTemperature(long x, long y, long z) {
-		return world.getTemperature(x, y, z);
-	}
 }

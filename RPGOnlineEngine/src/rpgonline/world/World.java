@@ -14,10 +14,6 @@ public interface World {
 	public String getAreaID(long x, long y, long z);
 	public void setBiomeID(long x, long y, long z, int id);
 	public int getBiomeID(long x, long y, long z);
-	public void setHumidity(long x, long y, long z, float id);
-	public float getHumidity(long x, long y, long z);
-	public void setTemperature(long x, long y, long z, float id);
-	public float getTemperature(long x, long y, long z);
 	public default void setTile(long x, long y, long z, Tile tile) {
 		setTile(x, y, z, tile, "");
 	}

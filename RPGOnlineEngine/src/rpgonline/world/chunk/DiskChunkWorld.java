@@ -7,6 +7,7 @@ import org.newdawn.slick.util.Log;
 
 import rpgonline.tile.Tiles;
 
+@Deprecated
 public class DiskChunkWorld extends ChunkWorld {
 	private final File f;
 	public DiskChunkWorld(File f) {

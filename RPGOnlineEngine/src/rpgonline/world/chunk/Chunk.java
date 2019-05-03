@@ -20,8 +20,6 @@ public class Chunk {
 	private volatile boolean[][][] flag = new boolean[1][SIZE][SIZE];
 	private volatile String[][][] area = new String[1][SIZE][SIZE];
 	private volatile int[][][] biome = new int[1][SIZE][SIZE];
-	private volatile float[][][] humidity = new float[1][SIZE][SIZE];
-	private volatile float[][][] temperature = new float[1][SIZE][SIZE];
 	private boolean change = false;
 	private long lastUsed = System.currentTimeMillis();
 	public Chunk(long x, long y, long z) {
@@ -83,24 +81,6 @@ public class Chunk {
 		change = true;
 		biome[(int) z][(int) x][(int) y] = id;
 	}
-	public synchronized float getTemperature(long x, long y, long z) {
-		lastUsed = System.currentTimeMillis();
-		return temperature[(int) z][(int) x][(int) y];
-	}
-	public synchronized void setTemperature(long x, long y, long z, float id) {
-		lastUsed = System.currentTimeMillis();
-		change = true;
-		temperature[(int) z][(int) x][(int) y] = id;
-	}
-	public synchronized float getHumidity(long x, long y, long z) {
-		lastUsed = System.currentTimeMillis();
-		return humidity[(int) z][(int) x][(int) y];
-	}
-	public synchronized void setHumidity(long x, long y, long z, float id) {
-		lastUsed = System.currentTimeMillis();
-		change = true;
-		humidity[(int) z][(int) x][(int) y] = id;
-	}
 	public long getX() {
 		return x;
 	}
@@ -113,6 +93,7 @@ public class Chunk {
 	public boolean isAt(long cx, long cy, long cz) {
 		return x == cx && y == cy && z == cz;
 	}
+	@Deprecated
 	public void serialise(File f) throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
 		
@@ -130,6 +111,7 @@ public class Chunk {
 		
 		dos.close();
 	}
+	@Deprecated
 	public void read(File f) throws IOException {
 		change = true;
 		DataInputStream dis = new DataInputStream(new FileInputStream(f));

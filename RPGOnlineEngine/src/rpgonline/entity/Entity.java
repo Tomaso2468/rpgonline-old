@@ -118,6 +118,12 @@ public abstract class Entity implements Serializable {
 		float red = world.getLightColor().r;
 		float green = world.getLightColor().g;
 		float blue = world.getLightColor().b;
+		
+		float lum = (world.getLightColor().r + world.getLightColor().g + world.getLightColor().b) / 3;
+		
+		float rscale = FastMath.max(lum * 10, 1);
+		float gscale = FastMath.max(lum * 10, 1);
+		float bscale = FastMath.max(lum * 10, 1);
 
 		for (LightSource l : lights) {
 			double dist = FastMath.hypot(x - l.getLX(), y - l.getLY());
@@ -126,9 +132,9 @@ public abstract class Entity implements Serializable {
 				dist = 1;
 			}
 
-			red += l.getR() / dist / FastMath.sqrt(dist);
-			green += l.getG() / dist / dist;
-			blue += l.getB() / dist / dist / dist;
+			red += l.getR() / dist / FastMath.sqrt(dist) / rscale;
+			green += l.getG() / dist / dist / gscale;
+			blue += l.getB() / dist / dist / dist / bscale;
 		}
 
 		colors[0] = red;
