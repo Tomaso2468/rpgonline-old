@@ -232,7 +232,7 @@ public class HttpLogonServer implements UserServer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getPrivateUuid(String login, String password) {
+	public String getPrivateUuid(String login, String password) {
 		try {
 			String query = "email=" + URLEncoder.encode(login, "UTF-8");
 			query += "&";
@@ -268,10 +268,10 @@ public class HttpLogonServer implements UserServer {
 			System.out.println("User name Resp Code: " + con.getResponseCode());
 			System.out.println("User name Resp Message: " + con.getResponseMessage());
 
-			return Long.parseLong(response.toString());
+			return response.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
-			return -1;
+			Log.error(e);
+			return UserServerUtils.ERROR32;
 		}
 	}
 
@@ -279,7 +279,7 @@ public class HttpLogonServer implements UserServer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isValidPrivateUuid(long uuid, long puuid) {
+	public boolean isValidPrivateUuid(long uuid, String puuid) {
 		try {
 			String query = "uuid=" + URLEncoder.encode(uuid + "", "UTF-8");
 			query += "&";
@@ -361,6 +361,186 @@ public class HttpLogonServer implements UserServer {
 		} catch (IOException e) {
 			Log.error(e);
 			return -1;
+		}
+	}
+
+	@Override
+	public String getToken(long uuid, String puuid) {
+		try {
+			String query = "uuid=" + URLEncoder.encode(uuid + "", "UTF-8");
+			query += "&";
+			query += "puuid=" + URLEncoder.encode(puuid + "", "UTF-8");
+			query += "&";
+			query += "action=" + URLEncoder.encode("gentoken", "UTF-8");
+
+			URL myurl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) myurl.openConnection();
+			con.setRequestMethod("POST");
+
+			con.setRequestProperty("Content-length", String.valueOf(query.length()));
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencode");
+			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+
+			DataOutputStream output = new DataOutputStream(con.getOutputStream());
+
+			output.writeBytes(query);
+
+			output.close();
+
+			DataInputStream input = new DataInputStream(con.getInputStream());
+
+			StringBuilder response = new StringBuilder();
+
+			for (int c = input.read(); c != -1; c = input.read()) {
+				response.append(c);
+			}
+			input.close();
+
+			System.out.println("User name Resp Code: " + con.getResponseCode());
+			System.out.println("User name Resp Message: " + con.getResponseMessage());
+
+			return response.toString();
+		} catch (IOException e) {
+			Log.error(e);
+			return UserServerUtils.ERROR64;
+		}
+	}
+
+	@Override
+	public LogonStatus attemptLogon(String token) {
+		try {
+			String query = "token=" + URLEncoder.encode(token, "UTF-8");
+			query += "&";
+			query += "action=" + URLEncoder.encode("logontoken", "UTF-8");
+
+			URL myurl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) myurl.openConnection();
+			con.setRequestMethod("POST");
+
+			con.setRequestProperty("Content-length", String.valueOf(query.length()));
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencode");
+			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+
+			DataOutputStream output = new DataOutputStream(con.getOutputStream());
+
+			output.writeBytes(query);
+
+			output.close();
+
+			DataInputStream input = new DataInputStream(con.getInputStream());
+
+			StringBuilder response = new StringBuilder();
+
+			for (int c = input.read(); c != -1; c = input.read()) {
+				response.append(c);
+			}
+			input.close();
+
+			System.out.println("Logon Resp Code: " + con.getResponseCode());
+			System.out.println("Logon Resp Message: " + con.getResponseMessage());
+
+			if (response.toString() == "logon") {
+				return LogonStatus.SUCCESS;
+			} else {
+				return LogonStatus.INCORRECT;
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return LogonStatus.ENCODE_FAILIURE;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return LogonStatus.INVALID_URL;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return LogonStatus.CONNECT_FAILIURE;
+		}
+	}
+
+	@Override
+	public long getTokenUUID(String token) {
+		try {
+			String query = "token=" + URLEncoder.encode(token, "UTF-8");
+			query += "&";
+			query += "action=" + URLEncoder.encode("uuidtoken", "UTF-8");
+
+			URL myurl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) myurl.openConnection();
+			con.setRequestMethod("POST");
+
+			con.setRequestProperty("Content-length", String.valueOf(query.length()));
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencode");
+			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+
+			DataOutputStream output = new DataOutputStream(con.getOutputStream());
+
+			output.writeBytes(query);
+
+			output.close();
+
+			DataInputStream input = new DataInputStream(con.getInputStream());
+
+			StringBuilder response = new StringBuilder();
+
+			for (int c = input.read(); c != -1; c = input.read()) {
+				response.append(c);
+			}
+			input.close();
+
+			System.out.println("User name Resp Code: " + con.getResponseCode());
+			System.out.println("User name Resp Message: " + con.getResponseMessage());
+
+			return Long.parseLong(response.toString());
+		} catch (IOException e) {
+			Log.error(e);
+			return -1;
+		}
+	}
+
+	@Override
+	public String getTokenPUUID(String token) {
+		try {
+			String query = "token=" + URLEncoder.encode(token, "UTF-8");
+			query += "&";
+			query += "action=" + URLEncoder.encode("privateuuidtoken", "UTF-8");
+
+			URL myurl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) myurl.openConnection();
+			con.setRequestMethod("POST");
+
+			con.setRequestProperty("Content-length", String.valueOf(query.length()));
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencode");
+			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+			con.setDoOutput(true);
+			con.setDoInput(true);
+
+			DataOutputStream output = new DataOutputStream(con.getOutputStream());
+
+			output.writeBytes(query);
+
+			output.close();
+
+			DataInputStream input = new DataInputStream(con.getInputStream());
+
+			StringBuilder response = new StringBuilder();
+
+			for (int c = input.read(); c != -1; c = input.read()) {
+				response.append(c);
+			}
+			input.close();
+
+			System.out.println("User name Resp Code: " + con.getResponseCode());
+			System.out.println("User name Resp Message: " + con.getResponseMessage());
+
+			return response.toString();
+		} catch (IOException e) {
+			Log.error(e);
+			return UserServerUtils.ERROR32;
 		}
 	}
 }

@@ -50,7 +50,7 @@ public interface UserServer {
 	 * @param password A valid password.
 	 * @return A valid UUID.
 	 */
-	public long getPrivateUuid(String login, String password);
+	public String getPrivateUuid(String login, String password);
 
 	/**
 	 * Checks if a UUID and private UUID is valid
@@ -59,7 +59,7 @@ public interface UserServer {
 	 * @param puuid A private UUID.
 	 * @return {@code true} if the UUIDs are valid. {@code false} otherwise.
 	 */
-	public boolean isValidPrivateUuid(long uuid, long puuid);
+	public boolean isValidPrivateUuid(long uuid, String puuid);
 	
 	public long getIDFromName(String username);
 
@@ -87,4 +87,12 @@ public interface UserServer {
 			return valid;
 		}
 	}
+	
+	public String getToken(long uuid, String puuid);
+	
+	public LogonStatus attemptLogon(String token);
+	
+	public long getTokenUUID(String token);
+	
+	public String getTokenPUUID(String token);
 }

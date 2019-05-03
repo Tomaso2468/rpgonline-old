@@ -1,9 +1,15 @@
 package rpgonline.net.logon;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.newdawn.slick.util.Log;
 
 /**
  * A client side logon server that should be used <b>Only for testing</b>
@@ -12,25 +18,39 @@ import java.util.List;
  *
  */
 public class LocalLogonServer implements UserServer {
-	/**
-	 * A list of users.
-	 */
+	private static final int PUUID_SIZE = 32;
+	private static final int TOKEN_SIZE = 64;
+
+	private final File database;
 	private final List<User> users;
 
-	/**
-	 * Constructs a login server from a list of users.
-	 * 
-	 * @param users A list of users.
-	 */
-	public LocalLogonServer(List<User> users) {
+	public LocalLogonServer(File database) {
+		this(new ArrayList<User>(), database);
+	}
+
+	public LocalLogonServer(List<User> users, File database) {
+		database.mkdirs();
+		this.database = database;
 		this.users = users;
 	}
 
-	/**
-	 * Constructs a login server.
-	 */
-	public LocalLogonServer() {
-		this(new ArrayList<User>());
+	public LocalLogonServer(String gameID) {
+		this(new ArrayList<User>(), gameID);
+	}
+
+	public LocalLogonServer(List<User> users, String gameID) {
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.contains("win")) {
+			database = new File(new File(System.getenv("APPDATA"), "rpgonline"), gameID);
+		} else if (os.contains("mac")) {
+			database = new File(new File(System.getProperty("user.home") + "/Library/Application Support", "rpgonline"),
+					gameID);
+		} else {
+			database = new File(new File(System.getProperty("user.home"), ".rpgonline"), gameID);
+		}
+
+		database.mkdirs();
+		this.users = users;
 	}
 
 	/**
@@ -110,25 +130,25 @@ public class LocalLogonServer implements UserServer {
 		/**
 		 * A user name or email.
 		 */
-		private final String login;
+		public final String login;
 		/**
 		 * A password.
 		 */
-		private final String password;
+		public final String password;
 		/**
 		 * The user's ID.
 		 */
-		private final long uuid;
+		public final long uuid;
 		/**
 		 * A user name.
 		 */
-		private final String username;
+		public final String username;
 		/**
 		 * A private ID for verification.
 		 */
-		private long puuid;
-		
-		private long reload_time;
+		public String puuid;
+
+		public long reload_time;
 
 		/**
 		 * Constructs a new {@code User}.
@@ -139,7 +159,7 @@ public class LocalLogonServer implements UserServer {
 		 * @param username A user name.
 		 * @param puuid    A private ID.
 		 */
-		public User(String login, String password, long uuid, String username, long puuid) {
+		public User(String login, String password, long uuid, String username, String puuid) {
 			this.login = login;
 			this.password = password;
 			this.uuid = uuid;
@@ -163,7 +183,9 @@ public class LocalLogonServer implements UserServer {
 			this.uuid = uuid;
 			this.username = username;
 			this.reload_time = System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5;
-			this.puuid = new SecureRandom(longToBytes(uuid)).nextLong();
+			byte[] puuid_bytes = new byte[PUUID_SIZE];
+			new SecureRandom().nextBytes(puuid_bytes);
+			this.puuid = UserServerUtils.bytesToHex(puuid_bytes);
 		}
 
 		/**
@@ -207,75 +229,190 @@ public class LocalLogonServer implements UserServer {
 		 * 
 		 * @return A unique long value.
 		 */
-		public long getPuuid() {
-			if(reload_time < System.currentTimeMillis()) {
+		public String getPuuid() {
+			if (reload_time < System.currentTimeMillis()) {
 				pickNewPUUID();
 			}
 			return puuid;
 		}
-		
+
 		public void pickNewPUUID() {
-			SecureRandom random = new SecureRandom(longToBytes(uuid));
-			puuid = random.nextLong();
-			
+			byte[] puuid_bytes = new byte[PUUID_SIZE];
+			new SecureRandom().nextBytes(puuid_bytes);
+			this.puuid = UserServerUtils.bytesToHex(puuid_bytes);
+
 			this.reload_time = System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5;
 		}
 	}
-	
+
 	public static byte[] longToBytes(long x) {
-	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-	    buffer.putLong(x);
-	    return buffer.array();
+		ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+		buffer.putLong(x);
+		return buffer.array();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getPrivateUuid(String login, String password) {
+	public String getPrivateUuid(String login, String password) {
 		for (User u : users) {
 			if (u.getLogin().equals(login) && u.getPassword().equals(password)) {
 				return u.getPuuid();
 			}
 		}
-		return -1;
+		return UserServerUtils.ERROR64;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isValidPrivateUuid(long uuid, long puuid) {
+	public boolean isValidPrivateUuid(long uuid, String puuid) {
 		for (User u : users) {
-			if (u.getUuid() == uuid && u.getPuuid() == puuid) {
+			if (u.getUuid() == uuid && u.getPuuid().equals(puuid)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	private long count = -1;
+
 	public synchronized long getNextID() {
 		count += 1;
-		
+
 		long next = new SecureRandom(longToBytes(count)).nextLong();
-		
-		for(User u : users) {
-			if(u.uuid == next) {
+
+		for (User u : users) {
+			if (u.uuid == next) {
 				return getNextID();
 			}
 		}
-		
+
 		return next;
 	}
 
 	@Override
-	public long getIDFromName(String username) {
+	public synchronized long getIDFromName(String username) {
 		for (User u : users) {
 			if (u.getUsername().equals(username)) {
 				return u.getUuid();
 			}
 		}
 		return -1;
+	}
+
+	private static class Token {
+		public long uuid;
+		public String token;
+
+		public Token(long uuid, String token) {
+			super();
+			this.uuid = uuid;
+			this.token = token;
+		}
+	}
+
+	@Override
+	public synchronized String getToken(long uuid, String puuid) {
+		if(isValidPrivateUuid(uuid, puuid)) {
+			return createToken(uuid).token;
+		}
+		return UserServerUtils.bytesToHex(UserServerUtils.genErrorUUID(TOKEN_SIZE));
+	}
+
+	@Override
+	public synchronized LogonStatus attemptLogon(String token) {
+		for(Token t : getTokens()) {
+			if(t.token.equals(token)) {
+				return LogonStatus.SUCCESS;
+			}
+		}
+		return LogonStatus.INCORRECT;
+	}
+
+	@Override
+	public synchronized long getTokenUUID(String token) {
+		for(Token t : getTokens()) {
+			if(t.token.equals(token)) {
+				return t.uuid;
+			}
+		}
+		
+		return -1;
+	}
+
+	@Override
+	public synchronized String getTokenPUUID(String token) {
+		for(Token t : getTokens()) {
+			if(t.token.equals(token)) {
+				for(User u : users) {
+					if(u.uuid == t.uuid) {
+						return u.getPuuid();
+					}
+				}
+			}
+		}
+		
+		return UserServerUtils.bytesToHex(UserServerUtils.genErrorUUID(TOKEN_SIZE));
+	}
+	
+	private synchronized List<Token> getTokens() {
+		List<Token> tokens = new ArrayList<Token>();
+		
+		File f = new File(database, "tokens.dat");
+		
+		try {
+			if (f.exists()) {
+				List<String> lines = Files.readAllLines(f.toPath());
+				
+				for (String s : lines) {
+					if(!s.trim().equals("")) {
+						String[] sa = s.split(" ");
+						
+						tokens.add(new Token(Long.parseLong(sa[0]), sa[1]));
+					}
+				}
+			}
+		} catch (IOException e) {
+			Log.error(e);
+		}
+		
+		return tokens;
+	}
+	
+	private synchronized Token createToken(long uuid) {
+		Token t = new Token(uuid, UserServerUtils.bytesToHex(UserServerUtils.generateSecure(TOKEN_SIZE)));
+		
+		for(Token t2 : getTokens()) {
+			if(t.token.equals(t2.token)) {
+				return createToken(uuid);
+			}
+		}
+		
+		File f = new File(database, "tokens.dat");
+		
+		try {
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+			List<String> lines = Files.readAllLines(f.toPath());
+			
+			lines.add(t.uuid + " " + t.token);
+			
+			PrintWriter pw = new PrintWriter(f);
+			
+			for(String s : lines) {
+				pw.println(s);
+			}
+			
+			pw.flush();
+			pw.close();
+		} catch (IOException e) {
+			Log.error(e);
+		}
+		
+		return t;
 	}
 }

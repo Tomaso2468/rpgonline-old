@@ -91,21 +91,41 @@ public class MultiLogonServer implements UserServer {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public long getPrivateUuid(String login, String password) {
-			return -1;
+		public String getPrivateUuid(String login, String password) {
+			return UserServerUtils.ERROR32;
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public boolean isValidPrivateUuid(long uuid, long puuid) {
+		public boolean isValidPrivateUuid(long uuid, String puuid) {
 			return false;
 		}
 
 		@Override
 		public long getIDFromName(String username) {
 			return -1;
+		}
+
+		@Override
+		public String getToken(long uuid, String puuid) {
+			return UserServerUtils.ERROR64;
+		}
+
+		@Override
+		public LogonStatus attemptLogon(String token) {
+			return LogonStatus.CONNECT_FAILIURE;
+		}
+
+		@Override
+		public long getTokenUUID(String token) {
+			return -1;
+		}
+
+		@Override
+		public String getTokenPUUID(String token) {
+			return UserServerUtils.ERROR32;
 		}
 
 	}
@@ -146,7 +166,7 @@ public class MultiLogonServer implements UserServer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getPrivateUuid(String login, String password) {
+	public String getPrivateUuid(String login, String password) {
 		return getBestServer().getPrivateUuid(login, password);
 	}
 
@@ -154,12 +174,32 @@ public class MultiLogonServer implements UserServer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isValidPrivateUuid(long uuid, long puuid) {
+	public boolean isValidPrivateUuid(long uuid, String puuid) {
 		return getBestServer().isValidPrivateUuid(uuid, puuid);
 	}
 
 	@Override
 	public long getIDFromName(String username) {
 		return getBestServer().getIDFromName(username);
+	}
+
+	@Override
+	public String getToken(long uuid, String puuid) {
+		return getBestServer().getToken(uuid, puuid);
+	}
+
+	@Override
+	public LogonStatus attemptLogon(String token) {
+		return getBestServer().attemptLogon(token);
+	}
+
+	@Override
+	public long getTokenUUID(String token) {
+		return getBestServer().getTokenUUID(token);
+	}
+
+	@Override
+	public String getTokenPUUID(String token) {
+		return getBestServer().getTokenPUUID(token);
 	}
 }
