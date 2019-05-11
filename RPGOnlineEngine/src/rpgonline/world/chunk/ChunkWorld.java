@@ -20,7 +20,7 @@ public class ChunkWorld implements World {
 	private long maz = 0;
 	private List<LightSource> lights = new ArrayList<LightSource>();
 	protected long update_counter = 0;
-	
+
 	@Override
 	public synchronized Tile getTile(long x, long y, long z) {
 		Tile t = getChunk(x, y, z).getTile(xToChunk(x), xToChunk(y), zToChunk(z));
@@ -38,22 +38,22 @@ public class ChunkWorld implements World {
 
 	@Override
 	public synchronized void setTile(long x, long y, long z, Tile tile, String state) {
-		if(x < mix) {
+		if (x < mix) {
 			mix = x;
 		}
-		if(x > max) {
+		if (x > max) {
 			max = x;
 		}
-		if(y < miy) {
+		if (y < miy) {
 			miy = y;
 		}
-		if(y > may) {
+		if (y > may) {
 			may = y;
 		}
-		if(z < miz) {
+		if (z < miz) {
 			miz = z;
 		}
-		if(z > maz) {
+		if (z > maz) {
 			maz = z;
 		}
 		getChunk(x, y, z).setTile(xToChunk(x), xToChunk(y), zToChunk(z), tile);
@@ -74,95 +74,95 @@ public class ChunkWorld implements World {
 		long cx = (int) Math.floor(x / (Chunk.SIZE * 1f));
 		long cy = (int) Math.floor(y / (Chunk.SIZE * 1f));
 		long cz = (int) Math.floor(z / (2 * 1f));
-		
-		if(last_chunk != null) {
-			if(last_chunk.isAt(cx, cy, cz)) {
+
+		if (last_chunk != null) {
+			if (last_chunk.isAt(cx, cy, cz)) {
 				return last_chunk;
 			}
 		}
-		
-		synchronized(cache) {
-			for(CacheEntry e : cache) {
+
+		synchronized (cache) {
+			for (CacheEntry e : cache) {
 				Chunk chunk = e.getChunk();
-				if(chunk.isAt(cx, cy, cz)) {
+				if (chunk.isAt(cx, cy, cz)) {
 					e.setTime(System.currentTimeMillis());
 					last_chunk = chunk;
 					return chunk;
 				}
 			}
 		}
-		
-		for(Chunk chunk : chunks) {
-			if(chunk.isAt(cx, cy, cz)) {
+
+		for (Chunk chunk : chunks) {
+			if (chunk.isAt(cx, cy, cz)) {
 				cache.add(new CacheEntry(chunk, System.currentTimeMillis()));
 				last_chunk = chunk;
 				return chunk;
 			}
 		}
-		
+
 		Chunk chunk = new Chunk(cx, cy, cz);
 		chunks.add(chunk);
 		cache.add(new CacheEntry(chunk, System.currentTimeMillis()));
 		last_chunk = chunk;
-		
+
 		return chunk;
 	}
-	
+
 	protected synchronized long xToChunk(long x) {
 		return Math.abs(x) % Chunk.SIZE;
 	}
-	
+
 	protected synchronized long zToChunk(long x) {
-		return Math.abs(x) % 1;
+		return 0;
 	}
-	
+
 	public synchronized void checkCacheServerQuick() {
 		clearCacheQuick(1000 * 60 * 3, 32);
 	}
-	
+
 	public synchronized void checkCacheClientQuick() {
 		clearCacheQuick(1000 * 60, 8);
 	}
-	
+
 	public synchronized void clearCacheQuick(long time, int max) {
 		int count = 0;
-		synchronized(cache) {
-			for(int i = 0; i < cache.size(); i++) {
-				if(count > max) {
+		synchronized (cache) {
+			for (int i = 0; i < cache.size(); i++) {
+				if (count > max) {
 					return;
 				}
 				CacheEntry e = cache.get(i);
-				if(e.getTime() + time < System.currentTimeMillis()) {
+				if (e.getTime() + time < System.currentTimeMillis()) {
 					cache.remove(e);
 					count += 1;
 				}
 			}
 		}
 	}
-	
+
 	public synchronized void checkCacheServer() {
 		clearCache(1000 * 60 * 2);
 	}
-	
+
 	public synchronized void checkCacheClient() {
 		clearCache(1000 * 30);
 	}
-	
+
 	public synchronized void clearCache(long time) {
-		synchronized(cache) {
-			for(int i = 0; i < cache.size(); i++) {
+		synchronized (cache) {
+			for (int i = 0; i < cache.size(); i++) {
 				CacheEntry e = cache.get(i);
-				if(e.getTime() + time < System.currentTimeMillis()) {
+				if (e.getTime() + time < System.currentTimeMillis()) {
 					cache.remove(e);
 				}
 			}
 		}
 	}
-	
+
 	public synchronized void clearCacheFull() {
 		cache.clear();
 	}
-	
+
 	public synchronized void doUpdateClient() {
 		update_counter += 1;
 		if (update_counter % 60 == 0) {
@@ -171,11 +171,11 @@ public class ChunkWorld implements World {
 		if (update_counter % 240 == 0) {
 			checkCacheClient();
 		}
-		if(update_counter < 0) {
+		if (update_counter < 0) {
 			update_counter = 0;
 		}
 	}
-	
+
 	public synchronized void doUpdateServer() {
 		update_counter += 1;
 		if (update_counter % 120 == 0) {
@@ -184,7 +184,7 @@ public class ChunkWorld implements World {
 		if (update_counter % 480 == 0) {
 			checkCacheServer();
 		}
-		if(update_counter < 0) {
+		if (update_counter < 0) {
 			update_counter = 0;
 		}
 	}
@@ -208,7 +208,7 @@ public class ChunkWorld implements World {
 	public long getMaxY() {
 		return may;
 	}
-	
+
 	public List<Chunk> getChunks() {
 		return new ArrayList<Chunk>(chunks);
 	}

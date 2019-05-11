@@ -8,6 +8,7 @@ import rpgonline.tile.Tile;
 
 public class WorldWrapper implements World {
 	private final World world;
+
 	public WorldWrapper(World world) {
 		this.world = world;
 	}
@@ -76,22 +77,22 @@ public class WorldWrapper implements World {
 	public Color getLightColor() {
 		return world.getLightColor();
 	}
-	
+
 	@Override
 	public void doUpdateClient() {
 		world.doUpdateClient();
 	}
-	
+
 	@Override
 	public void doUpdateServer() {
 		world.doUpdateServer();
 	}
-	
+
 	@Override
 	public void save() {
 		world.save();
 	}
-	
+
 	@Override
 	public void setTile(long x, long y, long z, Tile tile) {
 		world.setTile(x, y, z, tile);

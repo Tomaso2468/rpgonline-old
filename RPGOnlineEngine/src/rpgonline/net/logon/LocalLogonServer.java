@@ -316,7 +316,7 @@ public class LocalLogonServer implements UserServer {
 
 	@Override
 	public synchronized String getToken(long uuid, String puuid) {
-		if(isValidPrivateUuid(uuid, puuid)) {
+		if (isValidPrivateUuid(uuid, puuid)) {
 			return createToken(uuid).token;
 		}
 		return UserServerUtils.bytesToHex(UserServerUtils.genErrorUUID(TOKEN_SIZE));
@@ -324,8 +324,8 @@ public class LocalLogonServer implements UserServer {
 
 	@Override
 	public synchronized LogonStatus attemptLogon(String token) {
-		for(Token t : getTokens()) {
-			if(t.token.equals(token)) {
+		for (Token t : getTokens()) {
+			if (t.token.equals(token)) {
 				return LogonStatus.SUCCESS;
 			}
 		}
@@ -334,43 +334,43 @@ public class LocalLogonServer implements UserServer {
 
 	@Override
 	public synchronized long getTokenUUID(String token) {
-		for(Token t : getTokens()) {
-			if(t.token.equals(token)) {
+		for (Token t : getTokens()) {
+			if (t.token.equals(token)) {
 				return t.uuid;
 			}
 		}
-		
+
 		return -1;
 	}
 
 	@Override
 	public synchronized String getTokenPUUID(String token) {
-		for(Token t : getTokens()) {
-			if(t.token.equals(token)) {
-				for(User u : users) {
-					if(u.uuid == t.uuid) {
+		for (Token t : getTokens()) {
+			if (t.token.equals(token)) {
+				for (User u : users) {
+					if (u.uuid == t.uuid) {
 						return u.getPuuid();
 					}
 				}
 			}
 		}
-		
+
 		return UserServerUtils.bytesToHex(UserServerUtils.genErrorUUID(TOKEN_SIZE));
 	}
-	
+
 	private synchronized List<Token> getTokens() {
 		List<Token> tokens = new ArrayList<Token>();
-		
+
 		File f = new File(database, "tokens.dat");
-		
+
 		try {
 			if (f.exists()) {
 				List<String> lines = Files.readAllLines(f.toPath());
-				
+
 				for (String s : lines) {
-					if(!s.trim().equals("")) {
+					if (!s.trim().equals("")) {
 						String[] sa = s.split(" ");
-						
+
 						tokens.add(new Token(Long.parseLong(sa[0]), sa[1]));
 					}
 				}
@@ -378,41 +378,41 @@ public class LocalLogonServer implements UserServer {
 		} catch (IOException e) {
 			Log.error(e);
 		}
-		
+
 		return tokens;
 	}
-	
+
 	private synchronized Token createToken(long uuid) {
 		Token t = new Token(uuid, UserServerUtils.bytesToHex(UserServerUtils.generateSecure(TOKEN_SIZE)));
-		
-		for(Token t2 : getTokens()) {
-			if(t.token.equals(t2.token)) {
+
+		for (Token t2 : getTokens()) {
+			if (t.token.equals(t2.token)) {
 				return createToken(uuid);
 			}
 		}
-		
+
 		File f = new File(database, "tokens.dat");
-		
+
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
 			}
 			List<String> lines = Files.readAllLines(f.toPath());
-			
+
 			lines.add(t.uuid + " " + t.token);
-			
+
 			PrintWriter pw = new PrintWriter(f);
-			
-			for(String s : lines) {
+
+			for (String s : lines) {
 				pw.println(s);
 			}
-			
+
 			pw.flush();
 			pw.close();
 		} catch (IOException e) {
 			Log.error(e);
 		}
-		
+
 		return t;
 	}
 }

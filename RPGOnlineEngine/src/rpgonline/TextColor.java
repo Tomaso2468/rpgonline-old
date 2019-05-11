@@ -3,8 +3,9 @@ package rpgonline;
 import org.newdawn.slick.Color;
 
 public class TextColor {
-	public static ColorList DARK = new ColorList(new Color(255, 32, 32), Color.yellow, Color.orange, Color.green, Color.cyan,
-			new Color(16, 128, 255), new Color(128, 32, 255), Color.magenta, Color.pink, Color.white, Color.lightGray);
+	public static ColorList DARK = new ColorList(new Color(255, 32, 32), Color.yellow, Color.orange, Color.green,
+			Color.cyan, new Color(16, 128, 255), new Color(128, 32, 255), Color.magenta, Color.pink, Color.white,
+			Color.lightGray);
 	public static ColorList LIGHT = new ColorList(Color.red.darker(), Color.yellow.darker(), Color.orange.darker(),
 			Color.green.darker(), Color.cyan.darker(), Color.blue, new Color(128, 32, 255).darker(),
 			Color.magenta.darker(), Color.pink.darker(), Color.black, Color.darkGray);

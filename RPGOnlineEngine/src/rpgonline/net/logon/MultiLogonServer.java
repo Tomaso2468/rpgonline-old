@@ -4,8 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * <p>A server that supports multiple connections and will pick the best connection.</p>
- * <p>Servers are prioritised by their order in the list.</p>
+ * <p>
+ * A server that supports multiple connections and will pick the best
+ * connection.
+ * </p>
+ * <p>
+ * Servers are prioritised by their order in the list.
+ * </p>
+ * 
  * @author Tomas
  */
 public class MultiLogonServer implements UserServer {
@@ -20,6 +26,7 @@ public class MultiLogonServer implements UserServer {
 
 	/**
 	 * Constructs a {@code MultiLogonServer} from a list of servers.
+	 * 
 	 * @param servers A list of servers.
 	 */
 	public MultiLogonServer(List<UserServer> servers) {
@@ -28,6 +35,7 @@ public class MultiLogonServer implements UserServer {
 
 	/**
 	 * Constructs a {@code MultiLogonServer} from an array.
+	 * 
 	 * @param servers An array.
 	 */
 	public MultiLogonServer(UserServer[] servers) {
@@ -36,6 +44,7 @@ public class MultiLogonServer implements UserServer {
 
 	/**
 	 * Gets the best server to connect to.
+	 * 
 	 * @return A server.
 	 */
 	public synchronized UserServer getBestServer() {
@@ -49,6 +58,7 @@ public class MultiLogonServer implements UserServer {
 
 	/**
 	 * A server used if not other server can be found.
+	 * 
 	 * @author Tomas
 	 */
 	private static class DownServer implements UserServer {

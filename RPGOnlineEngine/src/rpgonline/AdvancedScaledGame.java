@@ -1,5 +1,6 @@
 package rpgonline;
 
+import org.apache.commons.math3.util.FastMath;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -76,7 +77,7 @@ public class AdvancedScaledGame implements Game {
 			Log.info("Container size: " + container.getWidth() + " " + container.getHeight());
 			float scaleX = container.getWidth() / w;
 			float scaleY = container.getHeight() / h;
-			float scale = Math.min(scaleX, scaleY);
+			float scale = FastMath.min(scaleX, scaleY);
 			Log.info("Scaling " + scale);
 			g.pushTransform();
 			g.scale(scale, scale);

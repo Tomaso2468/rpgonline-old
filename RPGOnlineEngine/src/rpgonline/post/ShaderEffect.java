@@ -70,10 +70,10 @@ public class ShaderEffect implements PostEffect {
 	protected void updateShader(Shader shader) {
 
 	}
-	
+
 	@Override
 	public void dispose() {
-		if(shader != null) {
+		if (shader != null) {
 			shader.deleteShader();
 		}
 	}

@@ -3,7 +3,7 @@ package rpgonline;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.newdawn.slick.Image;
@@ -25,7 +25,7 @@ import org.newdawn.slick.util.Log;
  * @author Tomas
  */
 public class TextureMap {
-	private static Map<String, Image> textures = new Hashtable<String, Image>();
+	private static Map<String, Image> textures = new HashMap<String, Image>();
 
 	/**
 	 * Gets a texture from a texture ID.
@@ -34,7 +34,7 @@ public class TextureMap {
 	 * @return The mapped texture.
 	 */
 	public static Image getTexture(String s) {
-		return textures.get(s);
+		return textures.get(s.intern());
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class TextureMap {
 	 * @param img An image.
 	 */
 	public static void addTexture(String s, Image img) {
-		textures.put(s, img);
+		textures.put(s.intern(), img);
 	}
 
 	/**

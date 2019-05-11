@@ -7,7 +7,7 @@ import rpgonline.net.logon.UserServer;
  * 
  * @author Tomas
  */
-public class ServerManager {
+public final class ServerManager {
 	static long update_time = 1000000000 / 60;
 	/**
 	 * The currently running/connected server.
@@ -54,7 +54,7 @@ public class ServerManager {
 	public static void setUserServer(UserServer user_server) {
 		ServerManager.user_server = user_server;
 	}
-	
+
 	public static double getTPS() {
 		return 1000000000.0 / update_time;
 	}

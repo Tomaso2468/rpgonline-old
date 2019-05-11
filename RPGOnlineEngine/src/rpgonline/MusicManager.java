@@ -57,7 +57,8 @@ public class MusicManager {
 	 * 
 	 * @param id   A previously ID.
 	 * @param loud A boolean value that determines the volume of the music.
-	 *             {@code true} -&gt; {@code 0.9} and {@code false} -&gt; {@code 0.4}
+	 *             {@code true} -&gt; {@code 0.9} and {@code false} -&gt;
+	 *             {@code 0.4}
 	 */
 	public static void setMusic(String id, boolean loud) {
 		if ((id == null || music.get(id) == null) && current != null) {
@@ -329,7 +330,7 @@ public class MusicManager {
 	 * <li>.mod</li>
 	 * </ul>
 	 * 
-	 * @param id An unmapped ID.
+	 * @param id  An unmapped ID.
 	 * @param loc A URL pointing to music.
 	 * @throws SlickException If an error occurred loading the music.
 	 */

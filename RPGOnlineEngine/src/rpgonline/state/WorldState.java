@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
 import org.lwjgl.input.Keyboard;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -75,13 +74,19 @@ public class WorldState extends BasicGameState {
 	 * A buffer for shader effects.
 	 */
 	private Image buffer;
+
+	/**
+	 * A buffer for lighting.
+	 */
+	private Image lightBuffer;
+
 	/**
 	 * The current shader effect.
 	 */
 	private PostEffect post = new MultiEffect(new PotatoShaderPack());
 
 	private boolean gui = true;
-	
+
 	private float gui_cooldown = 0.25f;
 
 	/**
@@ -107,8 +112,7 @@ public class WorldState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		if (buffer == null) {
 			buffer = new Image(container.getWidth(), container.getHeight());
-		}
-		if (container.getWidth() != buffer.getWidth() || container.getHeight() != buffer.getHeight()) {
+		} else if (container.getWidth() != buffer.getWidth() || container.getHeight() != buffer.getHeight()) {
 			buffer.destroy();
 			buffer = new Image(container.getWidth(), container.getHeight());
 		}
@@ -122,10 +126,9 @@ public class WorldState extends BasicGameState {
 		post.doPostProcess(container, game, buffer, g);
 
 		if (gui) {
+			Rectangle world_clip = g.getWorldClip();
+			Rectangle clip = g.getClip();
 			for (GUIItem gui : guis) {
-				Rectangle world_clip = g.getWorldClip();
-				Rectangle clip = g.getClip();
-
 				if (gui.isCentered()) {
 					g.translate(container.getWidth() / 2, container.getHeight() / 2);
 					g.scale(base_scale, base_scale);
@@ -134,9 +137,9 @@ public class WorldState extends BasicGameState {
 				}
 				gui.render(g, container, game, container.getWidth() / base_scale, container.getHeight() / base_scale);
 
+				g.resetTransform();
 				g.setWorldClip(world_clip);
 				g.setClip(clip);
-				g.resetTransform();
 			}
 		}
 	}
@@ -176,12 +179,9 @@ public class WorldState extends BasicGameState {
 			}
 		}
 
-		while (lights.size() > 10) {
+		while (lights.size() > 32) {
 			lights.remove(lights.size() - 1);
 		}
-
-		g.setColor(Color.black);
-		g.fillRect(0, 0, container.getWidth(), container.getHeight());
 
 		g.translate(container.getWidth() / 2, container.getHeight() / 2);
 
@@ -236,8 +236,9 @@ public class WorldState extends BasicGameState {
 						synchronized (entities) {
 							for (Entity e : entities) {
 								synchronized (e) {
-									if(!e.isFlying()) {
-										if (FastMath.round(e.getX() + 0.5f) == x && FastMath.floor(e.getY() - 0.25) == y) {
+									if (!e.isFlying()) {
+										if (FastMath.round(e.getX() + 0.5f) == x
+												&& FastMath.floor(e.getY() - 0.25) == y) {
 											e.render(container, game, g, e.getX(), e.getY(), z, world, lights,
 													(float) e.getX() - sx, (float) e.getY() - sy);
 										}
@@ -252,9 +253,9 @@ public class WorldState extends BasicGameState {
 		synchronized (entities) {
 			for (Entity e : entities) {
 				synchronized (e) {
-					if(e.isFlying()) {
-						e.render(container, game, g, e.getX(), e.getY(), -3, world, lights,
-								(float) e.getX() - sx, (float) e.getY() - sy);
+					if (e.isFlying()) {
+						e.render(container, game, g, e.getX(), e.getY(), -3, world, lights, (float) e.getX() - sx,
+								(float) e.getY() - sy);
 					}
 				}
 			}
@@ -262,6 +263,44 @@ public class WorldState extends BasicGameState {
 
 		g.popTransform();
 		g.resetTransform();
+
+		Graphics sg = g;
+
+		if (lightBuffer == null) {
+			lightBuffer = new Image(container.getWidth(), container.getHeight());
+		} else if (container.getWidth() != lightBuffer.getWidth() || container.getHeight() != lightBuffer.getHeight()) {
+			lightBuffer.destroy();
+			lightBuffer = new Image(container.getWidth(), container.getHeight());
+		}
+
+		g = lightBuffer.getGraphics();
+
+		g.clear();
+
+		g.setDrawMode(Graphics.MODE_NORMAL);
+
+		g.translate(container.getWidth() / 2, container.getHeight() / 2);
+
+		g.scale(base_scale, base_scale);
+		g.pushTransform();
+
+		g.scale(zoom, zoom);
+		if (shake > 0) {
+			g.translate((float) (FastMath.random() * shake * 5), (float) (FastMath.random() * shake * 5));
+		}
+
+		for (long y = miy; y < may; y++) {
+			for (long x = mix; x < max; x++) {
+				renderLightingTile(g, x, y, x - sx, y - sy, lights, world);
+			}
+		}
+
+		sg.resetTransform();
+
+		sg.setDrawMode(Graphics.MODE_NORMAL);
+		sg.drawImage(lightBuffer, 0, 0);
+
+		sg.setDrawMode(Graphics.MODE_NORMAL);
 	}
 
 	/**
@@ -330,14 +369,19 @@ public class WorldState extends BasicGameState {
 		} else if (!music.equals("last")) {
 			MusicManager.setMusic(music, false);
 		}
-		
+
 		gui_cooldown -= delf;
-		if(Keyboard.isKeyDown(Keyboard.KEY_F1) && gui_cooldown <= 0) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_F1) && gui_cooldown <= 0) {
 			gui = !gui;
 			gui_cooldown = 0.25f;
 		}
 	}
-	
+
+	public void renderLightingTile(Graphics g, long x, long y, float sx, float sy, List<LightSource> lights,
+			World world) throws SlickException {
+
+	}
+
 	public void exit() {
 		System.exit(0);
 	}

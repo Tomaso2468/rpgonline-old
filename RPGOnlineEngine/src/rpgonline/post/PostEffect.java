@@ -27,6 +27,6 @@ public interface PostEffect {
 			throws SlickException;
 
 	public default void dispose() throws SlickException {
-		
+
 	}
 }

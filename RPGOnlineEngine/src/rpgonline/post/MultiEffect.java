@@ -46,10 +46,10 @@ public class MultiEffect implements PostEffect {
 			g.copyArea(buffer, 0, 0);
 		}
 	}
-	
+
 	@Override
 	public void dispose() throws SlickException {
-		for(PostEffect e : effects) {
+		for (PostEffect e : effects) {
 			e.dispose();
 		}
 	}

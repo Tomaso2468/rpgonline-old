@@ -15,6 +15,7 @@ import rpgonline.world.World;
 
 /**
  * A class for tiles in a 2D top-down world.
+ * 
  * @author Tomas
  */
 public abstract class Tile {
@@ -45,8 +46,9 @@ public abstract class Tile {
 
 	/**
 	 * Create a new tile.
+	 * 
 	 * @param id The ID of the tile.
-	 * @param c The colour of the tile on a map.
+	 * @param c  The colour of the tile on a map.
 	 */
 	public Tile(int id, int c) {
 		this.id = id;
@@ -56,6 +58,7 @@ public abstract class Tile {
 
 	/**
 	 * Create a new tile.
+	 * 
 	 * @param c The colour of the tile on a map.
 	 */
 	public Tile(int c) {
@@ -64,6 +67,7 @@ public abstract class Tile {
 
 	/**
 	 * Gets the next ID for a tile.
+	 * 
 	 * @return An integer.
 	 */
 	private static int getNextID() {
@@ -73,7 +77,9 @@ public abstract class Tile {
 
 	/**
 	 * If the tile should render.
-	 * @return {@code true} if the {@code render} method should be called. {@code false} otherwise.
+	 * 
+	 * @return {@code true} if the {@code render} method should be called.
+	 *         {@code false} otherwise.
 	 */
 	public boolean shouldRender() {
 		return render;
@@ -81,7 +87,9 @@ public abstract class Tile {
 
 	/**
 	 * Sets if the tile should render.
-	 * @param render {@code true} if the {@code render} method should be called. {@code false} otherwise.
+	 * 
+	 * @param render {@code true} if the {@code render} method should be called.
+	 *               {@code false} otherwise.
 	 */
 	public void setRender(boolean render) {
 		this.render = render;
@@ -89,6 +97,7 @@ public abstract class Tile {
 
 	/**
 	 * Gets the ID of the tile.
+	 * 
 	 * @return An integer.
 	 */
 	public int getID() {
@@ -97,9 +106,10 @@ public abstract class Tile {
 
 	/**
 	 * Gets the basic texture for this tile.
-	 * @param x The {@code x} position of this tile.
-	 * @param y The {@code y} position of this tile.
-	 * @param z The {@code z} position of this tile.
+	 * 
+	 * @param x     The {@code x} position of this tile.
+	 * @param y     The {@code y} position of this tile.
+	 * @param z     The {@code z} position of this tile.
 	 * @param state The state of the tile.
 	 * @param world The game world.
 	 * @return A non-null string.
@@ -108,44 +118,48 @@ public abstract class Tile {
 
 	/**
 	 * Render the tile.
+	 * 
 	 * @param container The container holding the game.
-	 * @param game The game.
-	 * @param g The screen's graphics.
-	 * @param x The {@code x} position of this tile.
-	 * @param y The {@code y} position of this tile.
-	 * @param z The {@code z} position of this tile.
-	 * @param state The state of the tile.
-	 * @param world The game world.
-	 * @param lights A list of nearby lights.
-	 * @param sx The {@code x} position (in tiles) of this tile on the screen.
-	 * @param sy The {@code y} position (in tiles) of this tile on the screen.
+	 * @param game      The game.
+	 * @param g         The screen's graphics.
+	 * @param x         The {@code x} position of this tile.
+	 * @param y         The {@code y} position of this tile.
+	 * @param z         The {@code z} position of this tile.
+	 * @param state     The state of the tile.
+	 * @param world     The game world.
+	 * @param lights    A list of nearby lights.
+	 * @param sx        The {@code x} position (in tiles) of this tile on the
+	 *                  screen.
+	 * @param sy        The {@code y} position (in tiles) of this tile on the
+	 *                  screen.
 	 * @throws SlickException If an error occurs rendering.
 	 */
 	public void render(GameContainer container, StateBasedGame game, Graphics g, long x, long y, long z, String state,
 			World world, Collection<LightSource> lights, float sx, float sy) throws SlickException {
 		Image img = TextureMap.getTexture(getTexture(x, y, z, state, world));
-		
+
 		float[] colors1 = getLighting(world, lights, x, y);
 		img.setColor(Image.TOP_LEFT, colors1[0], colors1[1], colors1[2]);
-		
+
 		float[] colors2 = getLighting(world, lights, x + 1, y + 1);
 		img.setColor(Image.BOTTOM_RIGHT, colors2[0], colors2[1], colors2[2]);
-		
+
 		float[] colors3 = getLighting(world, lights, x + 1, y);
 		img.setColor(Image.TOP_RIGHT, colors3[0], colors3[1], colors3[2]);
-		
+
 		float[] colors4 = getLighting(world, lights, x, y + 1);
 		img.setColor(Image.BOTTOM_LEFT, colors4[0], colors4[1], colors4[2]);
-		
+
 		g.drawImage(img, sx * Tiles.getTileWidth(), sy * Tiles.getTileHeight());
 	}
-	
+
 	/**
 	 * Gets the appropriate lighting.
-	 * @param world The game world.
+	 * 
+	 * @param world  The game world.
 	 * @param lights A list of nearby lights.
-	 * @param x The {@code x} position of this tile.
-	 * @param y The {@code y} position of this tile.
+	 * @param x      The {@code x} position of this tile.
+	 * @param y      The {@code y} position of this tile.
 	 * @return A shared float array in the format RGB of size 3.
 	 */
 	protected float[] getLighting(World world, Collection<LightSource> lights, float x, float y) {
@@ -154,33 +168,40 @@ public abstract class Tile {
 
 	/**
 	 * Set if the tile should have a collision box.
+	 * 
 	 * @param state The state of the tile.
-	 * @return {@code true} if the tile should have a collision box. {@code false} otherwise.
+	 * @return {@code true} if the tile should have a collision box. {@code false}
+	 *         otherwise.
 	 */
 	public boolean isSolid(String state) {
 		return solid;
 	}
+
 	/**
 	 * If the tile should have a collision box.
-	 * @return {@code true} if the tile should have a collision box. {@code false} otherwise.
+	 * 
+	 * @return {@code true} if the tile should have a collision box. {@code false}
+	 *         otherwise.
 	 */
 	public void setSolid(boolean solid) {
 		this.solid = solid;
 	}
-	
+
 	/**
 	 * Cause a world update to the tile.
+	 * 
 	 * @param delf A float measuring the time in seconds since the last update.
-	 * @param x The {@code x} position of this tile.
-	 * @param y The {@code y} position of this tile.
-	 * @param z The {@code z} position of this tile.
+	 * @param x    The {@code x} position of this tile.
+	 * @param y    The {@code y} position of this tile.
+	 * @param z    The {@code z} position of this tile.
 	 */
 	public void update(float delf, long x, long y, long z) {
-		
+
 	}
 
 	/**
 	 * Gets the map colour of this tile.
+	 * 
 	 * @return An ARGB integer.
 	 */
 	public int getTileColor() {

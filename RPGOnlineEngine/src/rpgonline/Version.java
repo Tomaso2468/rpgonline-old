@@ -54,7 +54,7 @@ public class Version implements Comparable<Version> {
 	 * An identifier for normal versions.
 	 */
 	public static final int TYPE_NORMAL = 3;
-	
+
 	public static final int TYPE_UNSTABLE_PATCH = 4;
 	/**
 	 * An identifier for unstable versions.
@@ -195,7 +195,7 @@ public class Version implements Comparable<Version> {
 						snapshot = Integer.parseInt(num);
 
 						offset += num.length();
-					}  else if (verstr.charAt(offset) == 'r' & verstr.charAt(offset + 1) == 'c') {
+					} else if (verstr.charAt(offset) == 'r' & verstr.charAt(offset + 1) == 'c') {
 						offset += 2;
 						String num = verstr.substring(offset).split("-|\\+")[0];
 
@@ -257,7 +257,7 @@ public class Version implements Comparable<Version> {
 		if (type == TYPE_RC) {
 			sb.append("-rc" + rc);
 		}
-		
+
 		if (type == TYPE_NORMAL_PATCH || type == TYPE_UNSTABLE_PATCH) {
 			sb.append("-p" + snapshot);
 		}
@@ -272,7 +272,7 @@ public class Version implements Comparable<Version> {
 
 		StringBuilder sb2 = new StringBuilder();
 		sb2.append(name);
-		if(date != Long.MIN_VALUE) {
+		if (date != Long.MIN_VALUE) {
 			sb2.append(" ");
 			sb2.append(new Date(date * 1000));
 		}

@@ -4,6 +4,7 @@ import rpgonline.world.World;
 
 /**
  * An empty tile that has no collision.
+ * 
  * @author Tomas
  */
 public class EmptyTile extends Tile {
@@ -11,6 +12,7 @@ public class EmptyTile extends Tile {
 	 * The singleton instance of this class.
 	 */
 	public static final EmptyTile EMPTY_TILE = new EmptyTile();
+
 	/**
 	 * Singleton constructor.
 	 */
@@ -19,6 +21,7 @@ public class EmptyTile extends Tile {
 		setRender(false);
 		setSolid(false);
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */

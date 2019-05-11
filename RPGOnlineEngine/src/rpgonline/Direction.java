@@ -1,5 +1,7 @@
 package rpgonline;
 
+import org.apache.commons.math3.util.FastMath;
+
 /**
  * An enum used to represent NESW directions. This class also provides based
  * geometry control for directions.
@@ -81,34 +83,34 @@ public enum Direction {
 	public Direction bounce() {
 		switch (this) {
 		case EAST:
-			if (Math.random() < 0.05) {
+			if (FastMath.random() < 0.05) {
 				return Direction.NORTH;
 			}
-			if (Math.random() < 0.1) {
+			if (FastMath.random() < 0.1) {
 				return Direction.SOUTH;
 			}
 			return Direction.WEST;
 		case NORTH:
-			if (Math.random() < 0.05) {
+			if (FastMath.random() < 0.05) {
 				return Direction.EAST;
 			}
-			if (Math.random() < 0.1) {
+			if (FastMath.random() < 0.1) {
 				return Direction.WEST;
 			}
 			return Direction.SOUTH;
 		case SOUTH:
-			if (Math.random() < 0.05) {
+			if (FastMath.random() < 0.05) {
 				return Direction.EAST;
 			}
-			if (Math.random() < 0.1) {
+			if (FastMath.random() < 0.1) {
 				return Direction.WEST;
 			}
 			return Direction.NORTH;
 		case WEST:
-			if (Math.random() < 0.05) {
+			if (FastMath.random() < 0.05) {
 				return Direction.NORTH;
 			}
-			if (Math.random() < 0.1) {
+			if (FastMath.random() < 0.1) {
 				return Direction.SOUTH;
 			}
 			return Direction.EAST;

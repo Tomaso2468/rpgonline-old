@@ -75,7 +75,7 @@ public interface Server {
 		new Thread("Server Thread") {
 			public void run() {
 				Thread.currentThread().setUncaughtExceptionHandler(new GameExceptionHandler());
-				
+
 				long last_update = System.nanoTime();
 
 				try {
@@ -103,7 +103,8 @@ public interface Server {
 						update();
 						if (System.nanoTime() - last_update > (1000000000 / 60)) {
 							if (System.nanoTime() - last_update - 1000000000 / 60 > 32) {
-								Log.warn("Server is running " + (System.nanoTime() - last_update - 1000000000 / 60) / 1000000
+								Log.warn("Server is running "
+										+ (System.nanoTime() - last_update - 1000000000 / 60) / 1000000
 										+ " millis behind.");
 							}
 						}
@@ -246,13 +247,13 @@ public interface Server {
 	 * @see rpgonline.MusicManager
 	 */
 	public String getMusic();
-	
+
 	public void stop();
-	
+
 	public default void updateEntity(UpdatePacket p) {
-		
+
 	}
-	
+
 	public default boolean hasInited() {
 		return true;
 	}

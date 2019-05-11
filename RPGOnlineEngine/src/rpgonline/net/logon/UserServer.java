@@ -60,7 +60,7 @@ public interface UserServer {
 	 * @return {@code true} if the UUIDs are valid. {@code false} otherwise.
 	 */
 	public boolean isValidPrivateUuid(long uuid, String puuid);
-	
+
 	public long getIDFromName(String username);
 
 	/**
@@ -87,12 +87,12 @@ public interface UserServer {
 			return valid;
 		}
 	}
-	
+
 	public String getToken(long uuid, String puuid);
-	
+
 	public LogonStatus attemptLogon(String token);
-	
+
 	public long getTokenUUID(String token);
-	
+
 	public String getTokenPUUID(String token);
 }
