@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
 import org.lwjgl.input.Keyboard;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -16,6 +17,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import rpgonline.MusicManager;
+import rpgonline.TextureMap;
 import rpgonline.entity.Entity;
 import rpgonline.gui.GUIItem;
 import rpgonline.net.ServerManager;
@@ -278,6 +280,21 @@ public class WorldState extends BasicGameState {
 		g.clear();
 
 		g.setDrawMode(Graphics.MODE_NORMAL);
+		
+		Color wl = world.getLightColor();
+
+		float red = wl.r;
+		float green = wl.g;
+		float blue = wl.b;
+
+		float lum = (red + green + blue) / 3;
+
+		float rscale = FastMath.max(lum * 10, 1);
+		float gscale = FastMath.max(lum * 10, 1);
+		float bscale = FastMath.max(lum * 10, 1);
+		
+		g.setColor(wl);
+		g.fillRect(0, 0, container.getWidth(), container.getHeight());
 
 		g.translate(container.getWidth() / 2, container.getHeight() / 2);
 
@@ -289,18 +306,27 @@ public class WorldState extends BasicGameState {
 			g.translate((float) (FastMath.random() * shake * 5), (float) (FastMath.random() * shake * 5));
 		}
 
-		for (long y = miy; y < may; y++) {
+		/*for (long y = miy; y < may; y++) {
 			for (long x = mix; x < max; x++) {
 				renderLightingTile(g, x, y, x - sx, y - sy, lights, world);
 			}
+		}*/
+		
+		g.setDrawMode(Graphics.MODE_SCREEN);
+		
+		for(LightSource l : lights) {
+			Image img = TextureMap.getTexture("light").getScaledCopy(l.getBrightness() / 2);
+			
+			img.setImageColor(l.getR() * rscale, l.getG() * gscale, l.getB() * bscale);
+			
+			g.drawImage(img, (float) l.getLX() * 32 - 256 * l.getBrightness() / 2 - sx * 32, (float) l.getLY() * 32 - 256 * l.getBrightness() / 2 - sy * 32);
 		}
 
 		sg.resetTransform();
 
-		sg.setDrawMode(Graphics.MODE_NORMAL);
-		sg.drawImage(lightBuffer, 0, 0);
-
-		sg.setDrawMode(Graphics.MODE_NORMAL);
+		sg.setDrawMode(Graphics.MODE_COLOR_MULTIPLY);
+	    sg.drawImage(lightBuffer, 0, 0);
+	    sg.setDrawMode(Graphics.MODE_NORMAL);
 	}
 
 	/**
@@ -375,11 +401,6 @@ public class WorldState extends BasicGameState {
 			gui = !gui;
 			gui_cooldown = 0.25f;
 		}
-	}
-
-	public void renderLightingTile(Graphics g, long x, long y, float sx, float sy, List<LightSource> lights,
-			World world) throws SlickException {
-
 	}
 
 	public void exit() {

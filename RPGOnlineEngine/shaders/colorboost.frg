@@ -27,7 +27,7 @@ void main ()
 	vec2 loc = gl_TexCoord[0].st;
   	vec4 c = texture2D(texel, loc);
   	
-  	vec4 result = vec4(czm_saturation(c.rgb, 1.1), 1);
+  	vec4 result = vec4(czm_saturation(c.rgb, 1.5), 1);
   	
   	gl_FragColor = result;
 }

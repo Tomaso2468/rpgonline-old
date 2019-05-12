@@ -21,9 +21,9 @@ void main ()
   	vec4 p4 = texture2D(texel, loc4);
   	
   	vec4 bloom = p1 + p2 + p3 + p4;
-  	bloom /= 20;
+  	bloom /= 50;
   	
-  	vec4 result = vec4(p.rgb * 1.25, 1) + bloom;
+  	vec4 result = vec4(p.rgb * 1.01, 1) + bloom;
   	
   	gl_FragColor = result;
 }

@@ -120,6 +120,7 @@ public abstract class Entity implements Serializable {
 
 	public abstract String getTexture(double x, double y, double z, World world);
 
+	@Deprecated
 	public static float[] getLighting(World world, Collection<LightSource> lights, double x, double y) {
 		Color wl = world.getLightColor();
 
@@ -140,9 +141,9 @@ public abstract class Entity implements Serializable {
 				dist = 1;
 			}
 
-			red += l.getR() / dist / FastMath.sqrt(dist) / rscale;
-			green += l.getG() / dist / dist / gscale;
-			blue += l.getB() / dist / dist / dist / bscale;
+			red += l.getR() / dist / dist / rscale;
+			green += l.getG() / dist / FastMath.sqrt(dist) / gscale;
+			blue += l.getB() / dist / FastMath.sqrt(dist) / bscale;
 		}
 
 		colors[0] = red;

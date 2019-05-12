@@ -161,7 +161,9 @@ public abstract class Tile {
 	 * @param x      The {@code x} position of this tile.
 	 * @param y      The {@code y} position of this tile.
 	 * @return A shared float array in the format RGB of size 3.
+	 * @deprecated Lighting is performed in a separate render call.
 	 */
+	@Deprecated
 	protected float[] getLighting(World world, Collection<LightSource> lights, float x, float y) {
 		return Entity.getLighting(world, lights, x, y);
 	}
