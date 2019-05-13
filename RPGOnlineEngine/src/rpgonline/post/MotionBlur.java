@@ -20,7 +20,7 @@ public class MotionBlur implements PostEffect {
 	/**
 	 * The alpha value of the previous frame.
 	 */
-	private final float amount;
+	public float amount;
 
 	/**
 	 * Creates a {@code MotionBlur} effect.
