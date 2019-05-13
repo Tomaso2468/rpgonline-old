@@ -86,7 +86,7 @@ public class ConfigurableEffectsPack extends MultiEffect {
 		return (FXAA) fxaa.getE();
 	}
 
-	public static void setFxaa(ToggledEffect fxaa) {
-		ConfigurableEffectsPack.fxaa = fxaa;
+	public static void setFxaa(boolean b) {
+		ConfigurableEffectsPack.fxaa.setState(b);
 	}
 }
