@@ -29,13 +29,13 @@ public final class RPGOnline {
 			new Version("0.3.7+1551629276"), new Version("0.3.8+1551632798"), new Version("0.3.9+1551724618"),
 			new Version("0.3.10+1552726489"), new Version("0.3.11+1554057287"), new Version("0.3.12+1554479444"),
 			new Version("0.4.0+1555165066"), new Version("0.5.0+1556906194"), new Version("0.6.0+1557583232"),
-			new Version("0.6.1+1557657120"), new Version("0.6.2+1557659837"), new Version("0.6.3+1557771460") };
+			new Version("0.6.1+1557657120"), new Version("0.6.2+1557659837"), new Version("0.6.3+1557771460"), new Version("0.6.4+1557774208") };
 	/**
 	 * <p>
 	 * The current version of the RPGOnline library.
 	 * </p>
 	 */
-	public static final Version VERSION = new Version("0.6.3+1557771460");
+	public static final Version VERSION = new Version("0.6.4+1557774208");
 	/**
 	 * <p>
 	 * The version of java that this library was compiled with.
