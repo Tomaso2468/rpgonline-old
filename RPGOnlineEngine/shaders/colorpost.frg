@@ -189,14 +189,28 @@ uniform float contrast;
 uniform float saturation;
 uniform float _vibrance;
 uniform float hueShift;
+uniform float gamma;
 
 void main ()
 {
 	vec2 loc = gl_TexCoord[0].st;
   	vec4 c = texture2D(texel, loc);
   	
-  	c = saturationMatrix(saturation) * c;
   	brightnessAdjust(c, brightness);
+  	
+  	if (c.r < 0) {
+  		c.r = 0;
+  	}
+  	if (c.g < 0) {
+  		c.g = 0;
+  	}
+  	if (c.b < 0) {
+  		c.b = 0;
+  	}
+  	
+  	c = vec4(pow(c.rgb, vec3(1.0/gamma)), 1);
+  	
+  	c = saturationMatrix(saturation) * c;
   	contrastAdjust(c, contrast);
   	c = vibrance(c, _vibrance);
   	c = shiftHue(c, hueShift);

@@ -317,7 +317,7 @@ public class WorldState extends BasicGameState {
 		for(LightSource l : lights) {
 			Image img = TextureMap.getTexture("light").getScaledCopy(l.getBrightness() / 2);
 			
-			img.setImageColor(l.getR() * rscale, l.getG() * gscale, l.getB() * bscale);
+			img.setImageColor(l.getR() / rscale, l.getG() / gscale, l.getB() / bscale);
 			
 			g.drawImage(img, (float) l.getLX() * 32 - 256 * l.getBrightness() / 2 - sx * 32, (float) l.getLY() * 32 - 256 * l.getBrightness() / 2 - sy * 32);
 		}
