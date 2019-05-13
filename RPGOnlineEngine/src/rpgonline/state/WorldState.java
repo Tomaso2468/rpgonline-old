@@ -280,7 +280,7 @@ public class WorldState extends BasicGameState {
 		g.clear();
 
 		g.setDrawMode(Graphics.MODE_NORMAL);
-		
+
 		Color wl = world.getLightColor();
 
 		float red = wl.r;
@@ -292,7 +292,7 @@ public class WorldState extends BasicGameState {
 		float rscale = FastMath.max(lum * 10, 1);
 		float gscale = FastMath.max(lum * 10, 1);
 		float bscale = FastMath.max(lum * 10, 1);
-		
+
 		g.setColor(wl);
 		g.fillRect(0, 0, container.getWidth(), container.getHeight());
 
@@ -306,27 +306,29 @@ public class WorldState extends BasicGameState {
 			g.translate((float) (FastMath.random() * shake * 5), (float) (FastMath.random() * shake * 5));
 		}
 
-		/*for (long y = miy; y < may; y++) {
-			for (long x = mix; x < max; x++) {
-				renderLightingTile(g, x, y, x - sx, y - sy, lights, world);
-			}
-		}*/
-		
+		/*
+		 * for (long y = miy; y < may; y++) { for (long x = mix; x < max; x++) {
+		 * renderLightingTile(g, x, y, x - sx, y - sy, lights, world); } }
+		 */
+
 		g.setDrawMode(Graphics.MODE_SCREEN);
-		
-		for(LightSource l : lights) {
+
+		for (LightSource l : lights) {
 			Image img = TextureMap.getTexture("light").getScaledCopy(l.getBrightness() / 2);
-			
+
 			img.setImageColor(l.getR() / rscale, l.getG() / gscale, l.getB() / bscale);
-			
-			g.drawImage(img, (float) l.getLX() * 32 - 256 * l.getBrightness() / 2 - sx * 32, (float) l.getLY() * 32 - 256 * l.getBrightness() / 2 - sy * 32);
+
+			g.drawImage(img,
+					(float) l.getLX() * Tiles.getTileWidth() - 256 * l.getBrightness() / 2 - sx * Tiles.getTileWidth(),
+					(float) l.getLY() * Tiles.getTileHeight() - 256 * l.getBrightness() / 2
+							- sy * Tiles.getTileHeight());
 		}
 
 		sg.resetTransform();
 
 		sg.setDrawMode(Graphics.MODE_COLOR_MULTIPLY);
-	    sg.drawImage(lightBuffer, 0, 0);
-	    sg.setDrawMode(Graphics.MODE_NORMAL);
+		sg.drawImage(lightBuffer, 0, 0);
+		sg.setDrawMode(Graphics.MODE_NORMAL);
 	}
 
 	/**
