@@ -55,7 +55,7 @@ public class ShaderEffect implements PostEffect {
 
 		shader.startShader();
 
-		updateShader(shader);
+		updateShader(shader, container);
 
 		g.drawImage(buffer, 0, 0);
 
@@ -67,7 +67,7 @@ public class ShaderEffect implements PostEffect {
 	 * 
 	 * @param shader the shader to update.
 	 */
-	protected void updateShader(Shader shader) {
+	protected void updateShader(Shader shader, GameContainer c) {
 
 	}
 

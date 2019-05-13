@@ -1,5 +1,7 @@
 package rpgonline.post;
 
+import org.newdawn.slick.GameContainer;
+
 import slickshader.Shader;
 
 public class ColorEffectsShader extends ShaderEffect {
@@ -22,7 +24,7 @@ public class ColorEffectsShader extends ShaderEffect {
 	}
 	
 	@Override
-	protected void updateShader(Shader shader) {
+	protected void updateShader(Shader shader, GameContainer c) {
 		shader.setUniformFloatVariable("saturation", saturation);
 		shader.setUniformFloatVariable("brightness", brightness);
 		shader.setUniformFloatVariable("contrast", contrast);

@@ -49,8 +49,8 @@ public class BloodAura extends ShaderEffect {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateShader(Shader shader) {
-		super.updateShader(shader);
+	protected void updateShader(Shader shader, GameContainer c) {
+		super.updateShader(shader, c);
 
 		shader.setUniformFloatVariable("v", blood);
 	}

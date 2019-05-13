@@ -1,5 +1,7 @@
 package rpgonline.post;
 
+import org.newdawn.slick.GameContainer;
+
 import slickshader.Shader;
 
 /**
@@ -20,8 +22,8 @@ public class Blur extends ShaderEffect {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateShader(Shader shader) {
-		super.updateShader(shader);
+	protected void updateShader(Shader shader, GameContainer c) {
+		super.updateShader(shader, c);
 
 		shader.setUniformFloatVariable("ss", 0.75f / 1366f);
 	}

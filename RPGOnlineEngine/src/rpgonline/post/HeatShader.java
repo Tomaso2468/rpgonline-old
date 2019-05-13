@@ -1,5 +1,7 @@
 package rpgonline.post;
 
+import org.newdawn.slick.GameContainer;
+
 import slickshader.Shader;
 
 /**
@@ -19,8 +21,8 @@ public class HeatShader extends ShaderEffect {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateShader(Shader shader) {
-		super.updateShader(shader);
+	protected void updateShader(Shader shader, GameContainer c) {
+		super.updateShader(shader, c);
 
 		shader.setUniformFloatVariable("u_time", System.currentTimeMillis() % 100000 / 50f);
 		shader.setUniformFloatVariable("stren", 1);
