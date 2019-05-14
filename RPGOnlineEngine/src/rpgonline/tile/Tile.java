@@ -209,4 +209,8 @@ public abstract class Tile {
 	public int getTileColor() {
 		return c;
 	}
+	
+	public boolean isBatch() {
+		return true;
+	}
 }

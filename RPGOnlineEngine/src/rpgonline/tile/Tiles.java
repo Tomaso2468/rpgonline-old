@@ -10,10 +10,6 @@ import java.util.List;
  */
 public class Tiles {
 	/**
-	 * A tile for if no tile can be found.
-	 */
-	public static final Tile ERRORED_TILE = Tile.EMPTY_TILE;
-	/**
 	 * A list of tiles.
 	 */
 	static final List<Tile> tiles = new ArrayList<Tile>();
@@ -38,7 +34,7 @@ public class Tiles {
 				return t;
 			}
 		}
-		return ERRORED_TILE;
+		return Tile.EMPTY_TILE;
 	}
 
 	/**
