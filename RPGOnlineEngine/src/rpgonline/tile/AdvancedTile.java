@@ -123,6 +123,6 @@ public class AdvancedTile extends Tile {
 	
 	@Override
 	public boolean isBatch() {
-		return shadow && RPGConfig.isShadowEnabled();
+		return !(shadow && RPGConfig.isShadowEnabled());
 	}
 }

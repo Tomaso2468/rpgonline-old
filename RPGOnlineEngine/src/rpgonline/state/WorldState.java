@@ -233,8 +233,9 @@ public class WorldState extends BasicGameState {
 						t.render(container, game, g, x, y, z, world.getTileState(x, y, z), world, lights, x - sx,
 								y - sy);
 					}
-
-					if (z == -1) {
+				}
+				if (z == -1) {
+					for (long x = mix; x < max; x++) {
 						synchronized (entities) {
 							for (Entity e : entities) {
 								synchronized (e) {

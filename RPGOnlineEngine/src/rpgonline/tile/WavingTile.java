@@ -78,6 +78,6 @@ public class WavingTile extends AdvancedTile {
 	
 	@Override
 	public boolean isBatch() {
-		return super.isBatch() || RPGConfig.isWindEnabled();
+		return super.isBatch() && (!RPGConfig.isWindEnabled());
 	}
 }

@@ -137,19 +137,7 @@ public abstract class Tile {
 	public void render(GameContainer container, StateBasedGame game, Graphics g, long x, long y, long z, String state,
 			World world, Collection<LightSource> lights, float sx, float sy) throws SlickException {
 		Image img = TextureMap.getTexture(getTexture(x, y, z, state, world));
-
-		float[] colors1 = getLighting(world, lights, x, y);
-		img.setColor(Image.TOP_LEFT, colors1[0], colors1[1], colors1[2]);
-
-		float[] colors2 = getLighting(world, lights, x + 1, y + 1);
-		img.setColor(Image.BOTTOM_RIGHT, colors2[0], colors2[1], colors2[2]);
-
-		float[] colors3 = getLighting(world, lights, x + 1, y);
-		img.setColor(Image.TOP_RIGHT, colors3[0], colors3[1], colors3[2]);
-
-		float[] colors4 = getLighting(world, lights, x, y + 1);
-		img.setColor(Image.BOTTOM_LEFT, colors4[0], colors4[1], colors4[2]);
-
+		
 		g.drawImage(img, sx * Tiles.getTileWidth(), sy * Tiles.getTileHeight());
 	}
 
